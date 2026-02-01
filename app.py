@@ -11,7 +11,7 @@ st.set_page_config(
 @st.cache_data
 def load_sales():
     df = pd.read_csv(
-        "/Users/ajaygour/Library/CloudStorage/OneDrive-ALGO8AIPRIVATELIMITED/streamlit_reports.py/files/daily_sales(in).csv"
+        "files/daily_sales(in).csv"
     )
     df["invoice_date"] = pd.to_datetime(df["invoice_date"]).dt.date
     return df
@@ -20,7 +20,7 @@ def load_sales():
 @st.cache_data
 def load_production():
     df = pd.read_csv(
-        "/Users/ajaygour/Library/CloudStorage/OneDrive-ALGO8AIPRIVATELIMITED/streamlit_reports.py/files/dly_prod_jan(in).csv"
+        "files/dly_prod_jan(in).csv"
     )
     df["Prod.Date"] = pd.to_datetime(df["Prod.Date"]).dt.date
     return df
@@ -29,7 +29,7 @@ def load_production():
 @st.cache_data
 def load_stock():
     df = pd.read_csv(
-        "/Users/ajaygour/Library/CloudStorage/OneDrive-ALGO8AIPRIVATELIMITED/streamlit_reports.py/files/daily_stock(in).csv"
+        "files/daily_stock(in).csv"
     )
     df["date"] = pd.to_datetime(df["date"], format="%Y%m%d").dt.date
     return df
@@ -38,21 +38,21 @@ def load_stock():
 @st.cache_data
 def load_demand():
     return pd.read_csv(
-        "/Users/ajaygour/Library/CloudStorage/OneDrive-ALGO8AIPRIVATELIMITED/streamlit_reports.py/files/datewise_comparison 1(Requirement).csv"
+        "files/datewise_comparison 1(Requirement).csv"
     )
 
 
 @st.cache_data
 def load_norms():
     return pd.read_csv(
-        "/Users/ajaygour/Library/CloudStorage/OneDrive-ALGO8AIPRIVATELIMITED/streamlit_reports.py/files/datewise_comparison 1(Norm).csv"
+        "files/datewise_comparison 1(Norm).csv"
     )
 
 
 @st.cache_data
 def load_lead_time():
     df = pd.read_csv(
-        "/Users/ajaygour/Library/CloudStorage/OneDrive-ALGO8AIPRIVATELIMITED/streamlit_reports.py/files/lead_time(Design LeadTime).csv"
+        "files/lead_time(Design LeadTime).csv"
     )
     # 🔑 normalize column names
     df.columns = df.columns.str.strip()
