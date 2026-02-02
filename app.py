@@ -189,3 +189,68 @@ with c5:
 with c6:
     st.subheader("⏳ Lead Time")
     st.metric("Days", lead_time_val)
+
+
+# =====================================================
+# SKU-WISE SALES vs NORMS (ALL DATES) — SEPARATE DROPDOWN
+# =====================================================
+
+st.divider()
+st.subheader("📈 SKU-wise Sales vs Proposed Stock (Norms)")
+
+# ---------- SEPARATE SKU DROPDOWN ----------
+graph_sku = st.selectbox(
+    "Select SKU for Sales vs Norms Graph",
+    sorted(sales_df["SKUCode"].dropna().unique()),
+    key="graph_sku"
+)
+
+# ---------- SALES (DATE-WISE) ----------
+sku_sales = (
+    sales_df[sales_df["SKUCode"] == graph_sku]
+    .groupby("invoice_date", as_index=False)["volume"]
+    .sum()
+    .rename(columns={
+        "invoice_date": "Date",
+        "volume": "Sales Qty"
+    })
+)
+
+# ---------- NORMS (DATE-WISE) ----------
+norms_long = norms_df.melt(
+    id_vars=["SKUCode"],
+    var_name="Date",
+    value_name="Norm Qty"
+)
+
+norms_long["Date"] = pd.to_datetime(
+    norms_long["Date"], format="%d%m%Y", errors="coerce"
+).dt.date
+
+sku_norms = norms_long[norms_long["SKUCode"] == graph_sku]
+
+# ---------- MERGE (ALL DATES) ----------
+analysis_df = pd.merge(
+    sku_sales,
+    sku_norms,
+    on="Date",
+    how="left"   # keeps all sales dates
+)
+
+analysis_df["Sales Qty"] = analysis_df["Sales Qty"].fillna(0)
+analysis_df["Norm Qty"] = analysis_df["Norm Qty"].fillna(0)
+
+analysis_df = analysis_df.sort_values("Date")
+
+# ---------- GRAPH ----------
+if not analysis_df.empty:
+    st.line_chart(
+        analysis_df.set_index("Date")[["Sales Qty", "Norm Qty"]],
+        use_container_width=True
+    )
+else:
+    st.info("No data available for selected SKU.")
+
+# ---------- TABLE ----------
+with st.expander("📋 View date-wise numbers"):
+    st.dataframe(analysis_df, use_container_width=True)
